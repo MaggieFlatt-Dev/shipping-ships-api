@@ -1,6 +1,23 @@
 import sqlite3
 import json
 
+def create_dock(dock_data):
+    with sqlite3.connect("./shipping.db") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute(
+            """
+            INSERT INTO Dock
+                (location, capacity)
+                VALUES (?, ?)
+            """,
+            (dock_data['location'], dock_data['capacity'])
+        )
+
+        new_dock_id = db_cursor.lastrowid
+
+    return new_dock_id
+
 def update_dock(id, dock_data):
     with sqlite3.connect("./shipping.db") as conn:
         db_cursor = conn.cursor()
