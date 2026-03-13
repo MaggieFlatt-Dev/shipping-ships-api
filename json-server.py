@@ -5,13 +5,7 @@ from nss_handler import HandleRequests, status
 
 # Add your imports below this line
 from views import list_docks, retrieve_dock, delete_dock, update_dock, create_dock
-from views import (
-    list_haulers,
-    retrieve_hauler,
-    delete_hauler,
-    update_hauler,
-    create_hauler,
-)
+from views import list_haulers, retrieve_hauler, delete_hauler, update_hauler, create_hauler
 from views import list_ships, retrieve_ship, delete_ship, update_ship, create_ship
 
 
@@ -147,7 +141,39 @@ class JSONServer(HandleRequests):
     def do_POST(self):
         """Handle POST requests from a client"""
 
-        pass
+        request_body = ""
+        url = self.parse_url(self.path)
+
+        # Get the request body JSON for the new data
+        content_len = int(self.headers.get("content-length", 0))
+        request_body = self.rfile.read(content_len)
+        request_body = json.loads(request_body)
+
+        if url["requested_resource"] == "ships":
+                successfully_created = create_ship(request_body)
+                if successfully_created:
+                    return self.response(
+                        "", status.HTTP_201_SUCCESS_CREATED.value
+                    )
+
+        elif url["requested_resource"] == "docks":
+                successfully_created = create_dock(request_body)
+                if successfully_created:
+                    return self.response(
+                        "", status.HTTP_201_SUCCESS_CREATED.value
+                    )
+
+        elif url["requested_resource"] == "haulers":
+                successfully_created = create_hauler(request_body)
+                if successfully_created:
+                    return self.response(
+                        "", status.HTTP_201_SUCCESS_CREATED.value
+                    )
+
+        return self.response(
+            "Requested post not created",
+            status. HTTP_400_CLIENT_ERROR_BAD_REQUEST_DATA.value,
+        )
 
 
 #

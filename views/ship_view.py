@@ -11,7 +11,7 @@ def create_ship(ship_data):
                 (name, hauler_id)
                 VALUES (?, ?)
             """,
-            (ship_data['name'], ship_data['hauler_id'])
+            (ship_data['name'], ship_data['hauler_id']),
         )
 
         new_ship_id = db_cursor.lastrowid
